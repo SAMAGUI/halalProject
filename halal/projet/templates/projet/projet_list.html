@@ -1,0 +1,182 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row g-0">
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card"
+            style="background-image:url({../../../assets/img/icons/spot-illustrations/corner-4.png});"></div>
+        <!--/.bg-holder-->
+        <div class="card-body position-relative">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Form controls</h3>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 border border-primary">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0" data-anchor="data-anchor">Liste des projets</h5>
+                </div>
+                <div class="col-auto ms-auto">
+                    <a type="button" class="btn btn-outline-primary btn-sm rounded-pill me-1 mb-1 show-form"
+                        href="{% url 'projet_create' %}">
+                        <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Nouveau
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div class="card-body bg-light ">
+            <div class="pb-20 material-datatables">
+                <table id="datatables" class="table hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="table-plus datatable-nosort">#</th>
+
+                            <th>Numéro</th>
+                            <th>Nom</th>
+                            <th>Année d'exécution</th>
+                            <th>Budget global</th>
+                            <th>Financé par</th>
+                            <th>Document</th>
+                            <th>Montant alloué</th>
+                            <th>Actions</th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for projet in projets %}
+                        <tr>
+                            <td style="width: 70px; text-align: center">{{ forloop.counter }}</td>
+                            <td>{{ projet.numero }}</td>
+                            <td>{{ projet.nom }}</td>
+                            <td>{{ projet.execut.get_annee }}</td>
+                            <td>{{ projet.budget_global }}</td>
+                            <td>{{ projet.partenaire.nom }}</td>
+                            <td><a href="{{ projet.doc_projet.url }}">{{ projet.doc_projet|truncatechars:10 }}</a></td>
+                            <td>{{ projet.montant_alloue }}</td>
+                            <td class="td-actions" style="width: 120px; text-align: center">
+                                <div>
+                                    <a class="btn p-0 " type="button"
+                                        href="{% url 'projet_detail' projet.id %}" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="View">
+                                        <span class="text-500 fas fa-eye"></span>
+                                    </a>&nbsp;
+                                    <a class="btn p-0 " type="button"
+                                        href="{% url 'projet_update' projet.id %}" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Edit">
+                                        <span class="text-500 fas fa-edit"></span>
+                                    </a>&nbsp;
+                                    <!-- <button class="btn p-0 ms-2 show-form-delete" type="button"
+                                        data-url="{% url 'projet_delete' projet.id %}" data-bs-toggle="tooltip"
+                                        data-bs-placement="top" title="Delete">
+                                        <span class="text-500 fas fa-trash-alt"></span>
+                                    </button> -->
+                                </div>
+                            </td>
+
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="9" class="text-center bg-info">Aucun projet enregistré</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+<!-- modals bock -->
+{% block modals %}
+<div class="modal fade" id="staticBackdrop" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <div class="modal-content position-relative">
+
+        </div>
+    </div>
+</div>
+
+{% endblock modals %}
+<!-- scripts block -->
+{% block scripts %}
+<script>
+    const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
+        searchable: true,
+        fixedHeight: false,
+    });
+</script>
+<script>
+    $('#datatables').DataTable({
+        "pagingType": "full_numbers",
+        "lengthMenu": [
+            [10, 25, 50, -1],
+            [10, 25, 50, "All"]
+        ],
+        responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Recherche",
+        }
+
+    });
+
+    var table = $('#datatables').DataTable();
+
+    
+</script>
+<script>
+    $(document).ready(function() {
+        var ShowForm = function() {
+            var btn = $(this);
+            $.ajax({
+                url: btn.attr("data-url"),
+                type: "get",
+                dataType: "json",
+                beforeSend: function() {
+                    $("#staticBackdrop").modal("show");
+                },
+                success: function(data) {
+                    $("#staticBackdrop .modal-content").html(data.html_form);
+                },
+            });
+        };
+
+        var SaveForm = function() {
+            var form = $(this);
+            $.ajax({
+                url: form.attr("data-url"),
+                data: form.serialize(),
+                type: form.attr("method"),
+                dataType: "json",
+                success: function(data) {
+                    if (data.form_is_valid) {
+                        $("#datatables tbody").html(data.pjojet_list);
+                        $("#staticBackdrop").modal("hide");
+                    } else {
+                        $("#staticBackdrop .modal-content").html(data.html_form);
+                    }
+                },
+            });
+            return false;
+        };
+
+    //     // create
+        $(".show-form").click(ShowForm);
+    //     $("#staticBackdrop").on("submit", ".create-form", SaveForm);
+
+    //     //update
+    //     $("#datatables").on("click", ".show-form-update", ShowForm);
+    //     $("#staticBackdrop").on("submit", ".update-form", SaveForm);
+
+        //delete
+        $("#datatables").on("click", ".show-form-delete", ShowForm);
+        $("#staticBackdrop").on("submit", ".delete-form", SaveForm);
+     });
+</script>
+{% endblock scripts %}

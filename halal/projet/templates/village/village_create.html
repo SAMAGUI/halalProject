@@ -1,0 +1,54 @@
+{% load widget_tweaks %}
+
+<div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal"
+        aria-label="Close"></button>
+</div>
+<form method="post" id="villageForm"  data-communes-url="{% url 'ajax_load_communes' %}"  class="create-form">
+    {% csrf_token %}
+    <div class="modal-body p-0">
+        <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+            <h4 class="mb-1" id="modalExampleDemoLabel">Ajouter un village </h4>
+        </div>
+        <div class="p-4 pb-0">
+            <div class="form-group{% if form.departement.errors %} has-error{% endif %} mb-3">
+                <label for="{{ form.departement.id_for_label }}" class="col-form-label">{{ form.departement.label }}</label>
+                {% render_field form.departement class="form-control " id="id_departement" %} {% for error in form.departement.errors %}
+                <p class="help-block">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group{% if form.commune.errors %} has-error{% endif %} mb-3">
+                <label for="{{ form.commune.id_for_label }}" class="col-form-label">{{ form.commune.label }}</label>
+                {% render_field form.commune class="form-control" id="id_commune" %} {% for error in form.commune.errors %}
+                <p class="help-block">{{ error }}</p>
+                {% endfor %}
+            </div>
+            <div class="form-group{% if form.designation.errors %} has-error{% endif %} mb-3">
+                <label for="{{ form.designation.id_for_label }}" class="col-form-label">{{ form.designation.label }}</label>
+                {% render_field form.designation class="form-control " %} {% for error in form.designation.errors %}
+                <p class="help-block">{{ error }}</p>
+                {% endfor %}
+            </div>
+            
+            <!-- {% for field in form %}
+            <div class="form-group{% if field.errors %} has-error{% endif %} mb-3">
+                <label for="{{ field.id_for_label }}" class="col-form-label">{{ field.label }}</label>
+                {% render_field field class="form-control " %} {% for error in field.errors %}
+                <p class="help-block">{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endfor %} -->
+
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-secondary rounded-pill" type="button" data-bs-dismiss="modal">Annuler</button>
+        <button class="btn btn-primary rounded-pill" type="submit">Enregistrer</button>
+    </div>
+</form>
+
+
+
+
+
+

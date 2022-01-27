@@ -1,0 +1,108 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% block content %}
+<div class="row g-0">
+  <div class="card mb-3">
+    <div class="bg-holder d-none d-lg-block bg-card"
+      style="background-image:url({../../../assets/img/icons/spot-illustrations/corner-4.png});"></div>
+    <!--/.bg-holder-->
+    <div class="card-body position-relative">
+      <div class="row">
+        <div class="col-lg-8">
+          <h3>Form controls</h3>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card mb-3 border border-primary">
+    <div class="card-header">
+      <div class="row flex-between-end">
+        <div class="col-auto align-self-center">
+          <h5 class="mb-0" data-anchor="data-anchor">Détails du projet {{ projet.nom }}</h5>
+        </div>
+        <!-- <div class="col-auto ms-auto">
+                  <a type="button" class="btn btn-outline-primary btn-sm rounded-pill me-1 mb-1 show-form"
+                      href="{% url 'projet_create' %}">
+                      <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Nouveau
+                  </a>
+              </div> -->
+      </div>
+    </div>
+    <div class="card-body col-md-12">
+      <div class="col-md-2"></div>
+
+      <table class="table">
+        <tbody>
+          <tr>
+            <td width="40%"><b>Numéro Projet :</b></td>
+            <td>{{ projet.numero }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Nom Projet :</b></td>
+            <td>{{ projet.nom }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Type Projet :</b></td>
+            <td>{{ projet.type_projet }}</td>
+          </tr>
+          <tr>
+            <td width="30%"><b>Date Début :</b></td>
+            <td>{{ projet.debut }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Date Fin :</b></td>
+            <td>{{ projet.fin }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Budget Global :</b></td>
+            <td>{{ projet.budget_global }} FCFA</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Montant alloué :</b></td>
+            <td>{{ projet.montant_alloue }} FCFA</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Partenaire :</b></td>
+            <td>{{ projet.partenaire.nom }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Année d'Exécution</b></td>
+            <td>{{ projet.execut.get_annee }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Département :</b></td>
+            <td>{{ projet.village.commune.departement }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Commune :</b></td>
+            <td>{{ projet.village.commune.designation }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Village :</b></td>
+            <td>{{ projet.village }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Entreprise Exécutante :</b></td>
+            <td>{{ projet.entreprise.nom }}</td>
+          </tr>
+          <tr>
+            <td width="40%"><b>Document Projet :</b></td>
+            <td><a href="{{ projet.doc_projet.url }}">{{ projet.doc_projet|truncatechars:15 }}</a></td>
+          </tr>
+
+        </tbody>
+      </table>
+
+      <div class="float-end">
+        <a href="{% url 'projet_list' %}" class="btn btn-secondary rounded-pill">Retour</a>&nbsp;
+        <a class="btn btn-primary rounded-pill " href="{% url 'projet_update' projet.id %}" data-bs-toggle="tooltip"
+          data-bs-placement="top" title="Edit">
+          <span class="fas fa-edit"></span> Modifier
+        </a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock content %}

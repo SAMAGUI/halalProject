@@ -1,0 +1,29 @@
+{% for partenaire in partenaires %}
+<tr>
+    <td style="width: 60px; text-align: center">{{ forloop.counter }}</td>
+    
+    <td>{{ partenaire.nom }}</td>
+    <td>{{ partenaire.pays }}</td>
+    
+    
+    <td class="td-actions" style="width: 100px; text-align: center">
+        <div>
+            <button class="btn p-0 show-form-update" type="button" data-url="{% url 'partenaire_update' partenaire.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+            <span class="text-500 fas fa-eye"></span>
+          </button>&nbsp;
+            <button class="btn p-0 show-form-update" type="button" data-url="{% url 'partenaire_update' partenaire.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+              <span class="text-500 fas fa-edit"></span>
+          </button>&nbsp;
+            <button class="btn p-0 ms-2 show-form-delete" type="button" data-url="{% url 'partenaire_delete' partenaire.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
+              <span class="text-500 fas fa-trash-alt"></span>
+          </button>
+        </div>
+    </td>
+    
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="4" class="text-center bg-info">Aucun département enregistré</td>
+</tr>
+{% endfor %}

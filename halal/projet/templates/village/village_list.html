@@ -1,0 +1,179 @@
+{% extends "layouts/base.html" %} {% load static %} {% block content %}
+<div class="row g-0">
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card" style="background-image:url({../../../assets/img/icons/spot-illustrations/corner-4.png});"></div>
+        <!--/.bg-holder-->
+        <div class="card-body position-relative">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Form controls</h3>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 border border-primary">
+        <div class="card-header">
+            <div class="row flex-between-end">
+                <div class="col-auto align-self-center">
+                    <h5 class="mb-0" data-anchor="data-anchor">Liste des villages</h5>
+                </div>
+                <div class="col-auto ms-auto">
+                    <button type="button" class="btn btn-outline-primary btn-sm rounded-pill me-1 mb-1 show-form" data-url="{% url 'add_village' %}">
+                        <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Nouveau
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="card-body bg-light ">
+            <div class="pb-20 material-datatables">
+                <table id="datatables" class="table hover table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <th class="table-plus datatable-nosort">#</th>
+                            
+                            <th>Designation</th>                           
+                            
+                            <th>Actions</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% include "village/village_list_2.html" %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+<!-- modals bock -->
+{% block modals %}
+<div class="modal fade" id="staticBackdrop" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <div class="modal-content position-relative">
+
+        </div>
+    </div>
+</div>
+
+{% endblock modals %}
+<!-- scripts block -->
+{% block scripts %}
+<script>
+    const dataTableSearch = new simpleDatatables.DataTable("#datatable-search", {
+        searchable: true,
+        fixedHeight: false,
+    });
+</script>
+<script>
+    $('#datatables').DataTable({
+        "pagingType": "full_numbers",
+        "lengthMenu": [
+            [10, 25, 50, -1],
+            [10, 25, 50, "All"]
+        ],
+        responsive: true,
+        language: {
+            search: "_INPUT_",
+            searchPlaceholder: "Recherche",
+        }
+
+    });
+
+    var table = $('#datatables').DataTable();
+
+    // Edit record
+    /*table.on('click', '.edit', function() {
+      $tr = $(this).closest('tr');
+      if ($($tr).hasClass('child')) {
+        $tr = $tr.prev('.parent');
+      }
+
+      <!-- var data = table.row($tr).data();
+      alert('You press on Row: ' + data[0] + ' ' + data[1] + ' ' + data[2] + '\'s row.');
+    });
+
+    // Delete a record
+    table.on('click', '.remove', function(e) {
+      $tr = $(this).closest('tr');
+      if ($($tr).hasClass('child')) {
+        $tr = $tr.prev('.parent');
+      }
+      table.row($tr).remove().draw();
+      e.preventDefault();
+    });
+
+    //Like record
+    table.on('click', '.like', function() {
+      alert('You clicked on Like button');
+    }); -->*/
+</script>
+<script>
+    $(document).ready(function() {
+        var ShowForm = function() {
+            var btn = $(this);
+            $.ajax({
+                url: btn.attr("data-url"),
+                type: "get",
+                dataType: "json",
+                beforeSend: function() {
+                    $("#staticBackdrop").modal("show");
+                },
+                success: function(data) {
+                    $("#staticBackdrop .modal-content").html(data.html_form);
+                },
+            });
+        };
+
+        var SaveForm = function() {
+            var form = $(this);
+            $.ajax({
+                url: form.attr("data-url"),
+                data: form.serialize(),
+                type: form.attr("method"),
+                dataType: "json",
+                success: function(data) {
+                    if (data.form_is_valid) {
+                        $("#datatables tbody").html(data.village_list);
+                        $("#staticBackdrop").modal("hide");
+                    } else {
+                        $("#staticBackdrop .modal-content").html(data.html_form);
+                    }
+                },
+            });
+            return false;
+        };
+
+        // create
+        $(".show-form").click(ShowForm);
+        $("#staticBackdrop").on("submit", ".create-form", SaveForm);
+
+        //update
+        $("#datatables").on("click", ".show-form-update", ShowForm);
+        $("#staticBackdrop").on("submit", ".update-form", SaveForm);
+
+        //delete
+        $("#datatables").on("click", ".show-form-delete", ShowForm);
+        $("#staticBackdrop").on("submit", ".delete-form", SaveForm);
+    });
+</script>
+<script>
+    $("#id_departement").change(function () {
+      var url = $("#villageForm").attr("data-communes-url");  
+      var departementId = $(this).val();  
+
+      $.ajax({                      
+        url: url,                    
+        data: {
+          'departement': departementId       
+        },
+        success: function (data) {  
+          $("#id_commune").html(data);  
+        }
+      });
+
+    });
+  </script>
+{% endblock scripts %}

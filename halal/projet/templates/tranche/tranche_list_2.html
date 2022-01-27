@@ -1,0 +1,25 @@
+{% for tranche in tranches %}
+<tr>
+    <td style="width: 70px; text-align: center">{{ forloop.counter }}</td>
+    <td>{{ tranche.designation }}</td>
+        
+    <td class="td-actions" style="width: 150px; text-align: center">
+        <div>
+            <button class="btn p-0 show-form-update" type="button" data-url="{% url 'tranche_update' tranche.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="View">
+                <span class="text-500 fas fa-eye"></span>
+            </button>&nbsp;
+            <button class="btn p-0 show-form-update" type="button" data-url="{% url 'tranche_update' tranche.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Edit">
+                <span class="text-500 fas fa-edit"></span>
+            </button>&nbsp;
+            <button class="btn p-0 ms-2 show-form-delete" type="button" data-url="{% url 'tranche_delete' tranche.id %}" data-bs-toggle="tooltip" data-bs-placement="top" title="Delete">
+                <span class="text-500 fas fa-trash-alt"></span>
+            </button>
+        </div>
+    </td>
+
+</tr>
+{% empty %}
+<tr>
+    <td colspan="3" class="text-center bg-info">Aucune tranche enregistré</td>
+</tr>
+{% endfor %}

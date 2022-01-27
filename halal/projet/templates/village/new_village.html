@@ -1,0 +1,119 @@
+{% extends "layouts/base.html" %}
+{% load static %}
+{% load widget_tweaks %}
+{% block content %}
+<div class="row g-0">
+    <div class="card mb-3">
+        <div class="bg-holder d-none d-lg-block bg-card"
+            style="background-image:url({../../../assets/img/icons/spot-illustrations/corner-4.png});"></div>
+        <!--/.bg-holder-->
+        <div class="card-body position-relative">
+            <div class="row">
+                <div class="col-lg-8">
+                    <h3>Form controls</h3>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card mb-3 border border-primary">
+        <div class="card-header">
+            <div class="row flex-between-end">
+
+                <div class="col-auto align-self-center">
+                    {% if object %}
+                    <h5 class="mb-0" data-anchor="data-anchor">Modifier le village {{ object.designation }}</h5>
+                    {% else %}
+                    <h5 class="mb-0" data-anchor="data-anchor">Ajouter un vilage</h5>
+                    {% endif %}
+
+                </div>
+                <!-- <div class="col-auto ms-auto">
+                    <a class="btn btn-outline-primary btn-sm rounded-pill me-1 mb-1 show-form"
+                        href="{% url 'projet_create' %}">
+                        <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Nouveau
+                </a>
+                </div> -->
+            </div>
+        </div>
+        <div class="card-body bg-light ">
+            <div class="pb-20">
+                <form method="post" action="" class="row g-3">
+                    {% csrf_token %}
+
+                    <div class="p-4 pb-0">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <label for="{{ form.departement.id_for_label }}" class="form-label">
+                                    {{ form.departement.label }}
+                                </label>
+                                {% render_field form.departement class="form-control " hx-get="/communes/" hx-target="#id_commune" %}
+                                <!-- {% for error in form.departement.errors %}
+                                <p class="help-block">{{ error }}</p>
+                                {% endfor %} -->
+                            </div>
+                            <div class="col-md-6">
+                                <label for="{{ form.commune.id_for_label }}" class="form-label">
+                                    {{ form.commune.label }}
+                                </label>
+                                {% render_field form.commune class="form-control " %}
+                                <!-- {% for error in form.commune.errors %}
+                                <p class="help-block">{{ error }}</p>
+                                {% endfor %} -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="{{ form.designation.id_for_label }}" class="form-label">
+                                    {{ form.designation.label }}
+                                </label>
+                                {% render_field form.designation class="form-control" %}
+                                {% for error in form.designation.errors %}
+                                <p class="help-block">{{ error }}</p>
+                                {% endfor %}
+                            </div>
+                            
+                        </div>
+                        
+                        
+                        <!-- {% for field in form %}
+                        <div class="form-group{% if field.errors %} has-error{% endif %} mb-3">
+                            <label for="{{ field.id_for_label }}" class="col-form-label">{{ field.label }}</label>
+                            {% render_field field class="form-control " %} {% for error in field.errors %}
+                            <p class="help-block">{{ error }}</p>
+                            {% endfor %}
+                        </div>
+                        {% endfor %} -->
+
+                    </div>
+
+                    <div class="">
+                        
+                        <button class="btn btn-secondary rounded-pill" type="reset">Annuler</button>&nbsp;
+                        <button class="btn btn-primary rounded-pill" type="submit">Enregistrer</button>
+                        
+
+                    </div>
+                </form>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+    $(document).ready(function () {
+        $('.select-control').select2();
+    });
+    // $('datetimepicker').flatpickr({
+    //     dateFormat: "d/m/Y",
+
+    // });
+
+    // In your Javascript (external .js resource or <script> tag)
+    
+</script>
+
+{% endblock scripts %}
